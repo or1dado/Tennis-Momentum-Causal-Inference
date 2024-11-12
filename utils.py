@@ -18,7 +18,7 @@ def plot_calibration_curve(true_t:list, t_preds_dict: dict):
     for model_name, t_pred in t_preds_dict.items():
         assert len(true_t) == len(t_pred), f"Length mismatch: {len(true_t)} true labels and {len(t_pred)} predictions for {model_name}"
         
-        fraction_of_positives, mean_predicted_value = calibration_curve(true_t, t_pred, n_bins=10)
+        fraction_of_positives, mean_predicted_value = calibration_curve(true_t, t_pred, n_bins=15)
         plt.plot(mean_predicted_value, fraction_of_positives, marker='o', label=f'{model_name} Calibration plot')
 
     # Perfectly calibrated line
@@ -35,7 +35,7 @@ def plot_calibration_curve(true_t:list, t_preds_dict: dict):
 
 
 
-def plot_overlap(t, propensity_score):
+def plot_overlap(t, propensity_score, model_name=''):
     t = t.to_numpy()
     propensity_score = pd.Series(propensity_score).values
     propensity_score_df = pd.DataFrame({'t': t,  'propensity_score': propensity_score})
@@ -57,5 +57,5 @@ def plot_overlap(t, propensity_score):
     plt.legend(title='Group', labels=['Treated', 'Control'])
     plt.xlabel('Propensity Score')
     plt.ylabel('Number of Units')
-    plt.title('Overlap of Propensity Scores')
+    plt.title(f'{model_name} - Overlap of Propensity Scores')
     plt.show()
